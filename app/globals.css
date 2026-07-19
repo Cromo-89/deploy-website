@@ -1,26 +1,127 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ---------------------------------------------------------------------------
+   Deploy design tokens (Tailwind v4 CSS-first). See skill design-system.md.
+   Monochrome canvas + a single blue accent. Dark-first.
+--------------------------------------------------------------------------- */
+@theme {
+  --color-canvas: #0a0a0b;
+  --color-surface: #161616;
+  --color-surface-2: #1e1e20;
+  --color-line: #26262a;
+  --color-blue: #2375d7;
+  --color-blue-bright: #3b8bef;
+  --color-fg-muted: #8a8a8f;
+  --color-fg-subtle: #5a5a60;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --shadow-glow: 0 0 60px -15px rgba(35, 117, 215, 0.5);
+  --shadow-glow-sm: 0 0 30px -10px rgba(35, 117, 215, 0.45);
+
+  --tracking-tightest: -0.03em;
+  --tracking-tighter: -0.025em;
+
+  --animate-marquee: marquee 30s linear infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
   }
 }
 
+/* Fluid max-width container */
+.container-deploy {
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+@media (min-width: 768px) {
+  .container-deploy {
+    padding-inline: 2rem;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+  /* Lenis handles smooth scroll; disable native when Lenis is active */
+}
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-canvas);
+  color: #fff;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(35, 117, 215, 0.3);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Signature utilities
+--------------------------------------------------------------------------- */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 78%);
+  mask-image: radial-gradient(ellipse at center, black 40%, transparent 78%);
+}
+
+.text-gradient {
+  background: linear-gradient(180deg, #fff 0%, #b9c6d8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-gradient-blue {
+  background: linear-gradient(180deg, #fff 0%, #6aa6ee 120%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.mask-fade-x {
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion — non-negotiable
+--------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
