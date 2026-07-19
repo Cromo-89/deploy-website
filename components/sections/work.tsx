@@ -1,14 +1,10 @@
 "use client";
 
 import { useRef } from "react";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useReducedMotion,
-} from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Eyebrow } from "@/components/ui/eyebrow";
+import { useRichMotion } from "@/lib/use-rich-motion";
 
 const projects = [
   {
@@ -42,27 +38,40 @@ const projects = [
 ];
 
 export function Work() {
-  const reduce = useReducedMotion();
+  const rich = useRichMotion();
   const targetRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: targetRef });
   // Slide the track from a touch of right-inset to fully revealing the last card.
   const x = useTransform(scrollYProgress, [0, 1], ["2%", "-72%"]);
 
-  // Reduced motion / mobile: fall back to a normal stacked grid.
-  if (reduce) {
+  // Mobile / touch (and reduced motion): native swipe carousel with scroll-snap,
+  // instead of scroll-jacking the page — feels natural on a phone.
+  if (!rich) {
     return (
-      <section id="trabajo" className="scroll-mt-24 py-24 md:py-32">
+      <section id="trabajo" className="scroll-mt-24 overflow-hidden py-24 md:py-32">
         <div className="container-deploy">
           <Eyebrow>Trabajo seleccionado</Eyebrow>
           <h2 className="mt-5 max-w-2xl text-4xl font-medium tracking-tighter md:text-5xl">
             Productos que pusimos en producción.
           </h2>
-          <div className="mt-14 grid gap-6 sm:grid-cols-2">
-            {projects.map((p) => (
-              <Card key={p.name} p={p} />
-            ))}
-          </div>
         </div>
+
+        <div className="mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-5 pb-5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {projects.map((p) => (
+            <div
+              key={p.name}
+              className="w-[80vw] shrink-0 snap-center sm:w-[46vw]"
+            >
+              <Card p={p} />
+            </div>
+          ))}
+          {/* Trailing spacer so the last card can snap to center */}
+          <div aria-hidden className="w-px shrink-0" />
+        </div>
+
+        <p className="container-deploy mt-2 font-mono text-xs uppercase tracking-[0.12em] text-fg-subtle">
+          Desliza para ver más →
+        </p>
       </section>
     );
   }
