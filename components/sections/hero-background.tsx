@@ -3,11 +3,13 @@
 import { motion } from "framer-motion";
 import { useMemo } from "react";
 import { useRichMotion } from "@/lib/use-rich-motion";
+import { HeroShader } from "./hero-shader";
 
-// Animated hero backdrop: drifting blue "aurora" blobs + rising particles that
-// evoke a deployment/upload. Pure transform/opacity so it stays at 60fps.
-// On mobile/touch (or reduced motion) it falls back to a single static glow —
-// large animated blurs are expensive to repaint on mobile GPUs.
+// Animated hero backdrop: a WebGL liquid-aurora shader (reference: neuform.ai)
+// + rising particles that evoke a deployment/upload, layered on top. Pure
+// transform/opacity for the particles so they stay at 60fps regardless of the
+// shader. On mobile/touch (or reduced motion) it falls back to a single static
+// glow — WebGL and large animated blurs are both expensive on mobile GPUs.
 export function HeroBackground() {
   const rich = useRichMotion();
 
@@ -35,22 +37,8 @@ export function HeroBackground() {
 
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-      {/* Aurora blobs */}
-      <motion.div
-        className="absolute left-[46%] top-[26%] h-[560px] w-[560px] -translate-x-1/2 rounded-full bg-blue/25 blur-[140px]"
-        animate={{ x: [0, 60, -30, 0], y: [0, -40, 30, 0], scale: [1, 1.12, 0.95, 1] }}
-        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute left-[62%] top-[42%] h-[420px] w-[420px] rounded-full bg-blue-bright/15 blur-[130px]"
-        animate={{ x: [0, -50, 40, 0], y: [0, 40, -20, 0], scale: [1, 0.9, 1.15, 1] }}
-        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-      />
-      <motion.div
-        className="absolute left-[34%] top-[54%] h-[360px] w-[360px] rounded-full bg-blue/15 blur-[120px]"
-        animate={{ x: [0, 40, -40, 0], y: [0, -30, 20, 0], scale: [1, 1.1, 0.92, 1] }}
-        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-      />
+      {/* Liquid aurora shader (WebGL) */}
+      <HeroShader />
 
       {/* Rising particles — the "deploy" ascent */}
       <div className="absolute inset-0">
