@@ -2,7 +2,6 @@
 
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useRef } from "react";
-import { Eyebrow } from "@/components/ui/eyebrow";
 import { RevealText } from "@/components/ui/reveal-text";
 import { Button } from "@/components/ui/button";
 import { ease } from "@/lib/motion";
@@ -36,15 +35,7 @@ export function Hero() {
         style={{ y: reduce ? 0 : contentY, opacity: reduce ? 1 : contentOpacity }}
         className="container-deploy"
       >
-        <motion.div
-          initial={reduce ? false : { opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: ease.out }}
-        >
-          <Eyebrow>Agencia de desarrollo</Eyebrow>
-        </motion.div>
-
-        <h1 className="mt-6 max-w-5xl text-[clamp(2.75rem,7vw,6.5rem)] font-medium leading-[0.95] tracking-tightest">
+        <h1 className="max-w-5xl text-[clamp(2.75rem,7vw,6.5rem)] font-medium leading-[0.95] tracking-tightest">
           <RevealText text="Construimos y" delay={0.1} />{" "}
           <RevealText
             text="desplegamos"
