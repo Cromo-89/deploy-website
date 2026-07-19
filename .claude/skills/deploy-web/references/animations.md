@@ -53,7 +53,15 @@ export const reveal = {
 
 ## 3. `<Reveal>` — the default entrance
 
-The workhorse. Wrap almost anything that should fade+rise in on scroll.
+The workhorse. Wrap almost anything that should fade+rise+**focus** in on scroll.
+
+**Signature detail — blur-focus.** The Deploy reveal animates `filter: blur(8px) → blur(0px)`
+alongside opacity+y, so content "develops into focus" as it enters. This is what gives the
+refined, award-site feel (reference: augen.pro, whose titles reveal word-by-word from blurred
+to sharp). Keep the blur modest (~8–10px) and the motion one-shot (`once: true`) — animating
+blur continuously is expensive, but a single entrance transition is cheap. Honor
+`prefers-reduced-motion` (render the final, sharp state directly). The same blur-focus applies
+to the word-by-word headline reveal and to `RevealText`.
 
 ```tsx
 "use client";
