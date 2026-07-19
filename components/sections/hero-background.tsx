@@ -1,21 +1,19 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
+import { useMemo } from "react";
+import { useRichMotion } from "@/lib/use-rich-motion";
 
 // Animated hero backdrop: drifting blue "aurora" blobs + rising particles that
 // evoke a deployment/upload. Pure transform/opacity so it stays at 60fps.
-// Falls back to a single static glow when reduced motion is requested.
+// On mobile/touch (or reduced motion) it falls back to a single static glow —
+// large animated blurs are expensive to repaint on mobile GPUs.
 export function HeroBackground() {
-  const reduce = useReducedMotion();
-  const [mounted, setMounted] = useState(false);
-
-  // Particles get randomized on the client only, to avoid hydration mismatch.
-  useEffect(() => setMounted(true), []);
+  const rich = useRichMotion();
 
   const particles = useMemo(
     () =>
-      Array.from({ length: 16 }).map((_, i) => ({
+      Array.from({ length: 14 }).map((_, i) => ({
         id: i,
         left: Math.random() * 100,
         size: 2 + Math.random() * 3,
@@ -26,11 +24,11 @@ export function HeroBackground() {
     [],
   );
 
-  if (reduce) {
+  if (!rich) {
     return (
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/3 -z-10 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-blue/20 blur-[130px]"
+        className="pointer-events-none absolute left-1/2 top-1/3 -z-10 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-blue/20 blur-[90px]"
       />
     );
   }
@@ -55,9 +53,8 @@ export function HeroBackground() {
       />
 
       {/* Rising particles — the "deploy" ascent */}
-      {mounted && (
-        <div className="absolute inset-0">
-          {particles.map((p) => (
+      <div className="absolute inset-0">
+        {particles.map((p) => (
             <motion.span
               key={p.id}
               className="absolute bottom-0 rounded-full bg-blue-bright/70"
@@ -78,7 +75,6 @@ export function HeroBackground() {
             />
           ))}
         </div>
-      )}
     </div>
   );
 }

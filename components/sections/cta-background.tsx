@@ -1,20 +1,22 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useRichMotion } from "@/lib/use-rich-motion";
 
 // Technical backdrop for the closing CTA: a subtle grid with a blue "spotlight"
 // that drifts across it, like a deploy/scan sweep. Pure transform/opacity → 60fps.
-// Falls back to a static glow under prefers-reduced-motion.
+// On mobile/touch (or reduced motion) it falls back to a static glow — animated
+// large blurs are costly to repaint on mobile GPUs.
 export function CtaBackground() {
-  const reduce = useReducedMotion();
+  const rich = useRichMotion();
 
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
       {/* Technical grid */}
       <div className="bg-grid absolute inset-0" />
 
-      {reduce ? (
-        <div className="absolute left-1/2 top-1/2 h-[420px] w-[620px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue/20 blur-[140px]" />
+      {!rich ? (
+        <div className="absolute left-1/2 top-1/2 h-[320px] w-[480px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue/20 blur-[90px]" />
       ) : (
         <>
           {/* Drifting spotlight */}
