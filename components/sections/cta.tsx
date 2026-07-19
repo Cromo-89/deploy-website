@@ -21,7 +21,7 @@ export function CTA() {
 
       <div className="container-deploy text-center">
         <h2 className="mx-auto max-w-3xl text-[clamp(2.25rem,5.5vw,4.5rem)] font-medium leading-[1] tracking-tightest">
-          <RevealText text="¿Tenés un proyecto en mente?" />
+          <RevealText text="¿Tienes un proyecto en mente?" />
           <br />
           <RevealText
             text="Hagamos deploy juntos."

@@ -42,7 +42,7 @@ export function Process() {
       id="proceso"
       eyebrow="Cómo trabajamos"
       title="Un proceso claro, del concepto al deploy."
-      intro="Sin cajas negras. Sabés en qué etapa estás y qué sigue."
+      intro="Sin cajas negras. Sabes en qué etapa estás y qué sigue."
     >
       <div ref={ref} className="relative">
         {/* Progress line */}

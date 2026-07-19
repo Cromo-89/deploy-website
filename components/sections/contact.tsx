@@ -34,13 +34,13 @@ export function Contact() {
           </Reveal>
           <Reveal delay={0.05}>
             <h2 className="mt-5 text-4xl font-medium tracking-tighter md:text-5xl lg:text-6xl">
-              Contanos qué querés construir.
+              Cuéntanos qué quieres construir.
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-md leading-relaxed text-fg-muted">
-              Respondemos en menos de 24 hs. Sin formularios eternos: contanos la
-              idea y lo demás lo resolvemos en una llamada.
+              Respondemos en menos de 24 hs. Sin formularios eternos: cuéntanos
+              la idea y el resto lo resolvemos en una llamada.
             </p>
           </Reveal>
           <Reveal delay={0.15}>
@@ -53,7 +53,7 @@ export function Contact() {
                 <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               </a>
               <p className="text-sm text-fg-subtle">
-                Remoto · Trabajamos con equipos de toda LATAM
+                Chile · Trabajamos con equipos de toda LATAM
               </p>
             </div>
           </Reveal>
@@ -83,7 +83,7 @@ export function Contact() {
               name="message"
               required
               rows={5}
-              placeholder="Contanos sobre tu proyecto…"
+              placeholder="Cuéntanos sobre tu proyecto…"
               className={`${field} mt-4 resize-none`}
             />
             <div className="mt-6 flex items-center gap-4">

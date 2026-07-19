@@ -20,7 +20,7 @@ export function Team() {
       id="nosotros"
       eyebrow="Nosotros"
       title="Unos amigos que se toman el software en serio."
-      intro="Un equipo chico y senior. Vos hablás directo con quien construye tu producto."
+      intro="Un equipo pequeño y senior. Hablas directo con quien construye tu producto."
     >
       <motion.ul
         variants={staggerContainer}
