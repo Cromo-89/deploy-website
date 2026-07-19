@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion
 import { useRef } from "react";
 import { RevealText } from "@/components/ui/reveal-text";
 import { Button } from "@/components/ui/button";
+import { HeroBackground } from "./hero-background";
 import { ease } from "@/lib/motion";
 
 export function Hero() {
@@ -23,13 +24,15 @@ export function Hero() {
       ref={ref}
       className="relative flex min-h-[92vh] items-center overflow-hidden pt-28"
     >
-      {/* Background texture + glow */}
+      {/* Background texture + animated aurora/particles */}
       <div aria-hidden className="bg-grid absolute inset-0 -z-20" />
       <motion.div
         aria-hidden
         style={{ y: reduce ? 0 : glowY }}
-        className="pointer-events-none absolute left-1/2 top-1/3 -z-10 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-blue/20 blur-[130px]"
-      />
+        className="absolute inset-0 -z-10"
+      >
+        <HeroBackground />
+      </motion.div>
 
       <motion.div
         style={{ y: reduce ? 0 : contentY, opacity: reduce ? 1 : contentOpacity }}
