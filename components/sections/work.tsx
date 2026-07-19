@@ -39,42 +39,19 @@ const projects = [
 
 export function Work() {
   const rich = useRichMotion();
+  // Render the two variants as separate components so their hooks (useScroll)
+  // initialize with the ref already attached. Keeping useScroll in the parent
+  // broke desktop: it ran while the mobile branch was mounted (ref null) and
+  // never re-attached when the pinned section appeared.
+  return rich ? <WorkDesktop /> : <WorkMobile />;
+}
+
+// Desktop: horizontal track pinned while the page scrolls (scroll-jacking wow).
+function WorkDesktop() {
   const targetRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: targetRef });
   // Slide the track from a touch of right-inset to fully revealing the last card.
   const x = useTransform(scrollYProgress, [0, 1], ["2%", "-72%"]);
-
-  // Mobile / touch (and reduced motion): native swipe carousel with scroll-snap,
-  // instead of scroll-jacking the page — feels natural on a phone.
-  if (!rich) {
-    return (
-      <section id="trabajo" className="scroll-mt-24 overflow-hidden py-24 md:py-32">
-        <div className="container-deploy">
-          <Eyebrow>Trabajo seleccionado</Eyebrow>
-          <h2 className="mt-5 max-w-2xl text-4xl font-medium tracking-tighter md:text-5xl">
-            Productos que pusimos en producción.
-          </h2>
-        </div>
-
-        <div className="mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-5 pb-5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {projects.map((p) => (
-            <div
-              key={p.name}
-              className="w-[80vw] shrink-0 snap-center sm:w-[46vw]"
-            >
-              <Card p={p} />
-            </div>
-          ))}
-          {/* Trailing spacer so the last card can snap to center */}
-          <div aria-hidden className="w-px shrink-0" />
-        </div>
-
-        <p className="container-deploy mt-2 font-mono text-xs uppercase tracking-[0.12em] text-fg-subtle">
-          Desliza para ver más →
-        </p>
-      </section>
-    );
-  }
 
   return (
     <section id="trabajo" ref={targetRef} className="relative h-[320vh]">
@@ -86,7 +63,10 @@ export function Work() {
           </h2>
         </div>
 
-        <motion.div style={{ x }} className="flex gap-6 pl-[max(1.25rem,calc((100vw-1240px)/2+2rem))] pr-[10vw]">
+        <motion.div
+          style={{ x }}
+          className="flex gap-6 pl-[max(1.25rem,calc((100vw-1240px)/2+2rem))] pr-[10vw]"
+        >
           {projects.map((p) => (
             <div key={p.name} className="w-[80vw] shrink-0 sm:w-[52vw] lg:w-[38vw]">
               <Card p={p} />
@@ -94,6 +74,35 @@ export function Work() {
           ))}
         </motion.div>
       </div>
+    </section>
+  );
+}
+
+// Mobile / touch (and reduced motion): native swipe carousel with scroll-snap,
+// instead of scroll-jacking the page — feels natural on a phone.
+function WorkMobile() {
+  return (
+    <section id="trabajo" className="scroll-mt-24 overflow-hidden py-24 md:py-32">
+      <div className="container-deploy">
+        <Eyebrow>Trabajo seleccionado</Eyebrow>
+        <h2 className="mt-5 max-w-2xl text-4xl font-medium tracking-tighter md:text-5xl">
+          Productos que pusimos en producción.
+        </h2>
+      </div>
+
+      <div className="mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-5 pb-5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {projects.map((p) => (
+          <div key={p.name} className="w-[80vw] shrink-0 snap-center sm:w-[46vw]">
+            <Card p={p} />
+          </div>
+        ))}
+        {/* Trailing spacer so the last card can snap to center */}
+        <div aria-hidden className="w-px shrink-0" />
+      </div>
+
+      <p className="container-deploy mt-2 font-mono text-xs uppercase tracking-[0.12em] text-fg-subtle">
+        Desliza para ver más →
+      </p>
     </section>
   );
 }
