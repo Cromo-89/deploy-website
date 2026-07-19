@@ -75,7 +75,10 @@ export function Hero() {
                   className="inline-block overflow-hidden pb-[0.1em] align-bottom"
                 >
                   <motion.span
-                    className={cn("inline-block", item.grad && "text-gradient-blue")}
+                    className={cn(
+                    "inline-block",
+                    item.grad && "text-gradient-animated",
+                  )}
                     variants={
                       reduce
                         ? undefined
