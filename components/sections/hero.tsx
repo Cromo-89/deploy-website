@@ -1,11 +1,28 @@
 "use client";
 
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
-import { useRef } from "react";
-import { RevealText } from "@/components/ui/reveal-text";
+import { Fragment, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { HeroBackground } from "./hero-background";
 import { ease } from "@/lib/motion";
+import { cn } from "@/lib/utils";
+
+// One continuous headline so the words reveal as a single left-to-right wave.
+// "desplegamos" is just the accented word in the flow — not a separate,
+// late-arriving block (which read as a loading glitch).
+const HEADLINE: { w: string; grad?: boolean }[] = [
+  { w: "Construimos" },
+  { w: "y" },
+  { w: "desplegamos", grad: true },
+  { w: "el" },
+  { w: "software" },
+  { w: "que" },
+  { w: "tu" },
+  { w: "producto" },
+  { w: "necesita." },
+];
+
+const HEADLINE_TEXT = HEADLINE.map((h) => h.w).join(" ");
 
 export function Hero() {
   const ref = useRef<HTMLElement>(null);
@@ -38,14 +55,46 @@ export function Hero() {
         style={{ y: reduce ? 0 : contentY, opacity: reduce ? 1 : contentOpacity }}
         className="container-deploy"
       >
-        <h1 className="max-w-5xl text-[clamp(2.75rem,7vw,6.5rem)] font-medium leading-[0.95] tracking-tightest">
-          <RevealText text="Construimos y" delay={0.1} />{" "}
-          <RevealText
-            text="desplegamos"
-            delay={0.25}
-            className="text-gradient-blue"
-          />{" "}
-          <RevealText text="el software que tu producto necesita." delay={0.4} />
+        <h1
+          className="max-w-5xl text-[clamp(2.75rem,7vw,6.5rem)] font-medium leading-[0.95] tracking-tightest"
+          aria-label={HEADLINE_TEXT}
+        >
+          <motion.span
+            className="inline"
+            initial={reduce ? false : "hidden"}
+            animate="show"
+            variants={{
+              hidden: {},
+              show: { transition: { staggerChildren: 0.04, delayChildren: 0.05 } },
+            }}
+          >
+            {HEADLINE.map((item, i) => (
+              <Fragment key={i}>
+                <span
+                  aria-hidden
+                  className="inline-block overflow-hidden pb-[0.1em] align-bottom"
+                >
+                  <motion.span
+                    className={cn("inline-block", item.grad && "text-gradient-blue")}
+                    variants={
+                      reduce
+                        ? undefined
+                        : {
+                            hidden: { y: "110%" },
+                            show: {
+                              y: 0,
+                              transition: { duration: 0.65, ease: ease.out },
+                            },
+                          }
+                    }
+                  >
+                    {item.w}
+                  </motion.span>
+                </span>
+                {i < HEADLINE.length - 1 ? " " : ""}
+              </Fragment>
+            ))}
+          </motion.span>
         </h1>
 
         <motion.p
