@@ -35,6 +35,12 @@
   }
 }
 
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Fluid max-width container */
 .container-deploy {
   width: 100%;

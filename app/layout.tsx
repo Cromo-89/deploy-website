@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SmoothScroll } from "@/components/providers/smooth-scroll";
 import { Cursor } from "@/components/ui/cursor";
+import { BackToTop } from "@/components/ui/back-to-top";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 
@@ -44,6 +45,7 @@ export default function RootLayout({
           <Navbar />
           <main>{children}</main>
           <Footer />
+          <BackToTop />
         </SmoothScroll>
       </body>
     </html>
