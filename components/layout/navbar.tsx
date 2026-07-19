@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { ease } from "@/lib/motion";
 
 const links = [
   { href: "#servicios", label: "Servicios" },
@@ -17,6 +18,7 @@ const links = [
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const reduce = useReducedMotion();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -24,6 +26,14 @@ export function Navbar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Lock background scroll while the full-screen menu is open.
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   return (
     <header
@@ -92,35 +102,66 @@ export function Navbar() {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-0 flex flex-col justify-center bg-canvas px-6 md:hidden"
+            key="mobile-menu"
+            initial={reduce ? { opacity: 0 } : { clipPath: "inset(0 0 100% 0)" }}
+            animate={reduce ? { opacity: 1 } : { clipPath: "inset(0 0 0% 0)" }}
+            exit={reduce ? { opacity: 0 } : { clipPath: "inset(0 0 100% 0)" }}
+            transition={{ duration: 0.5, ease: ease.out }}
+            className="fixed inset-0 z-0 flex h-[100dvh] flex-col justify-center overflow-hidden bg-canvas px-6 md:hidden"
           >
-            <ul className="flex flex-col gap-2">
-              {links.map((l, i) => (
+            {/* Depth: technical grid + soft glow */}
+            <div aria-hidden className="bg-grid absolute inset-0 -z-10 opacity-50" />
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -right-20 top-24 -z-10 h-72 w-72 rounded-full bg-blue/15 blur-[90px]"
+            />
+
+            <motion.ul
+              className="flex flex-col gap-1"
+              initial="hidden"
+              animate="show"
+              variants={{
+                hidden: {},
+                show: { transition: { staggerChildren: 0.07, delayChildren: 0.18 } },
+              }}
+            >
+              {links.map((l) => (
                 <motion.li
                   key={l.href}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1 + i * 0.06 }}
+                  variants={{
+                    hidden: { opacity: 0, y: 28 },
+                    show: {
+                      opacity: 1,
+                      y: 0,
+                      transition: { duration: 0.5, ease: ease.out },
+                    },
+                  }}
                 >
                   <Link
                     href={l.href}
                     onClick={() => setOpen(false)}
-                    className="block py-3 text-4xl font-medium tracking-tighter"
+                    className="block py-2 text-5xl font-medium tracking-tighter transition-colors hover:text-blue-bright"
                   >
                     {l.label}
                   </Link>
                 </motion.li>
               ))}
-            </ul>
-            <div className="mt-10">
+            </motion.ul>
+
+            <motion.div
+              className="mt-12"
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                delay: 0.18 + links.length * 0.07,
+                duration: 0.5,
+                ease: ease.out,
+              }}
+            >
               <Button href="#contacto" magnetic={false} className="w-full">
                 Hablemos
               </Button>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
