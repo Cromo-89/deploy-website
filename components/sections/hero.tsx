@@ -65,35 +65,33 @@ export function Hero() {
             animate="show"
             variants={{
               hidden: {},
-              show: { transition: { staggerChildren: 0.04, delayChildren: 0.05 } },
+              show: { transition: { staggerChildren: 0.06, delayChildren: 0.05 } },
             }}
           >
             {HEADLINE.map((item, i) => (
               <Fragment key={i}>
-                <span
+                <motion.span
                   aria-hidden
-                  className="inline-block overflow-hidden pb-[0.1em] align-bottom"
-                >
-                  <motion.span
-                    className={cn(
+                  className={cn(
                     "inline-block",
                     item.grad && "text-gradient-animated",
                   )}
-                    variants={
-                      reduce
-                        ? undefined
-                        : {
-                            hidden: { y: "110%" },
-                            show: {
-                              y: 0,
-                              transition: { duration: 0.65, ease: ease.out },
-                            },
-                          }
-                    }
-                  >
-                    {item.w}
-                  </motion.span>
-                </span>
+                  variants={
+                    reduce
+                      ? undefined
+                      : {
+                          hidden: { opacity: 0, y: 16, filter: "blur(10px)" },
+                          show: {
+                            opacity: 1,
+                            y: 0,
+                            filter: "blur(0px)",
+                            transition: { duration: 0.7, ease: ease.out },
+                          },
+                        }
+                  }
+                >
+                  {item.w}
+                </motion.span>
                 {i < HEADLINE.length - 1 ? " " : ""}
               </Fragment>
             ))}

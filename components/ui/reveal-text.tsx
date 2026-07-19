@@ -1,10 +1,11 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { Fragment } from "react";
 import { ease } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
-// Kinetic headline: words rise from a clipped baseline, staggered.
+// Kinetic headline: words rise and come into focus (blur → sharp), staggered.
 export function RevealText({
   text,
   className,
@@ -26,21 +27,18 @@ export function RevealText({
   return (
     <span className={cn("inline", className)}>
       {words.map((w, i) => (
-        <span
-          key={i}
-          className="inline-block overflow-hidden pb-[0.12em] align-bottom"
-        >
+        <Fragment key={i}>
           <motion.span
             className={cn("inline-block", wordClassName?.(w, i))}
-            initial={{ y: "110%" }}
-            whileInView={{ y: 0 }}
+            initial={{ opacity: 0, y: 14, filter: "blur(8px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: ease.out, delay: delay + i * 0.06 }}
+            transition={{ duration: 0.7, ease: ease.out, delay: delay + i * 0.06 }}
           >
             {w}
-            {i < words.length - 1 ? " " : ""}
           </motion.span>
-        </span>
+          {i < words.length - 1 ? " " : ""}
+        </Fragment>
       ))}
     </span>
   );
