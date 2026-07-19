@@ -2,14 +2,12 @@ import Image from "next/image";
 import { RevealText } from "@/components/ui/reveal-text";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
+import { CtaBackground } from "./cta-background";
 
 export function CTA() {
   return (
     <section className="relative overflow-hidden py-28 md:py-40">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[420px] w-[620px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue/20 blur-[140px]"
-      />
+      <CtaBackground />
       <Image
         src="/isotype-blue.svg"
         alt=""
