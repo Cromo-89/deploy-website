@@ -36,14 +36,17 @@ export function Navbar() {
   }, [open]);
 
   return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
-        scrolled
-          ? "border-b border-line bg-canvas/70 backdrop-blur-xl"
-          : "border-b border-transparent",
-      )}
-    >
+    <>
+      <header
+        className={cn(
+          "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
+          // No blur/bg while the menu is open: backdrop-filter would make the
+          // header the containing block for the fixed overlay, breaking full-screen.
+          scrolled && !open
+            ? "border-b border-line bg-canvas/70 backdrop-blur-xl"
+            : "border-b border-transparent",
+        )}
+      >
       <nav className="container-deploy flex h-16 items-center justify-between md:h-20">
         <Link href="#top" aria-label="Deploy — inicio" className="relative z-10">
           <Image
@@ -97,8 +100,13 @@ export function Navbar() {
           />
         </button>
       </nav>
+      </header>
 
-      {/* Mobile overlay */}
+      {/* Mobile overlay — rendered OUTSIDE the header. The scrolled header uses
+          backdrop-blur, which turns it into the containing block for fixed
+          descendants; keeping the overlay here makes its `fixed inset-0` relative
+          to the viewport so it always covers the full screen. z-40 sits under the
+          header (z-50) so the logo and close button stay on top and clickable. */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -107,7 +115,7 @@ export function Navbar() {
             animate={reduce ? { opacity: 1 } : { clipPath: "inset(0 0 0% 0)" }}
             exit={reduce ? { opacity: 0 } : { clipPath: "inset(0 0 100% 0)" }}
             transition={{ duration: 0.5, ease: ease.out }}
-            className="fixed inset-0 z-0 flex h-[100dvh] flex-col justify-center overflow-hidden bg-canvas px-6 md:hidden"
+            className="fixed inset-0 z-40 flex h-[100dvh] flex-col justify-center overflow-hidden bg-canvas px-6 md:hidden"
           >
             {/* Depth: technical grid + soft glow */}
             <div aria-hidden className="bg-grid absolute inset-0 -z-10 opacity-50" />
@@ -165,6 +173,6 @@ export function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }
