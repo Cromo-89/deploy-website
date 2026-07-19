@@ -38,9 +38,9 @@ export function Footer() {
             <Image
               src="/logo-deploy-blue-white.svg"
               alt="Deploy"
-              width={128}
-              height={56}
-              className="h-7 w-auto"
+              width={160}
+              height={70}
+              className="h-10 w-auto"
             />
             <p className="mt-5 text-sm leading-relaxed text-fg-muted">
               Del concepto al deploy. Construimos software, web y apps que se

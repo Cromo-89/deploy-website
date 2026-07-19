@@ -39,9 +39,9 @@ export function Navbar() {
           <Image
             src="/logo-deploy-blue-white.svg"
             alt="Deploy"
-            width={112}
-            height={49}
-            className="h-6 w-auto md:h-7"
+            width={144}
+            height={63}
+            className="h-8 w-auto md:h-10"
             priority
           />
         </Link>
